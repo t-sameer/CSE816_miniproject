@@ -1,0 +1,56 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_HUB_CREDENTIALS_ID = 'dockerhub-creds'
+
+        DOCKER_IMAGE = 'tsameer/calculator:latest'
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                echo 'Pulling code from GitHub...'
+                checkout scm
+            }
+        }
+
+        stage('Build & Test with Maven') {
+            steps {
+                echo 'Compiling and running JUnit tests...'
+                sh 'mvn clean package'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                echo 'Building the Docker Image...'
+                sh "docker build -t ${DOCKER_IMAGE} ."
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                echo 'Pushing image to Docker Hub...'
+
+                withCredentials([usernamePassword(credentialsId: env.DOCKER_HUB_CREDENTIALS_ID, passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                    sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
+                    sh "docker push ${DOCKER_IMAGE}"
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline execution completed.'
+            sh "docker rmi ${DOCKER_IMAGE} || true"
+        }
+        success {
+            echo 'Build and Push Successful!'
+        }
+        failure {
+            echo 'Pipeline failed. Check the logs.'
+        }
+    }
+}
