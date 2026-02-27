@@ -13,14 +13,15 @@ public class Main {
             System.out.println("1. Square Root (√x)");
             System.out.println("2. Factorial (x!)");
             System.out.println("3. Natural Logarithm (ln(x))");
-            System.out.println("4. Exit");
-            System.out.print("Enter your choice (1-4): ");
+            System.out.println("4. Power (x^b)");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice (1-5): ");
 
             int choice;
             try {
                 choice = Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a number between 1 and 4.");
+                System.out.println("Invalid input. Please enter a number between 1 and 5.");
                 continue;
             }
 
@@ -42,11 +43,18 @@ public class Main {
                         System.out.println("Result: ln(" + logInput + ") = " + calculator.naturalLog(logInput));
                         break;
                     case 4:
+                        System.out.print("Enter the base (x): ");
+                        double base = Double.parseDouble(scanner.nextLine());
+                        System.out.print("Enter the exponent (b): ");
+                        double exponent = Double.parseDouble(scanner.nextLine());
+                        System.out.println("Result: " + base + "^" + exponent + " = " + calculator.power(base, exponent));
+                        break;
+                    case 5:
                         System.out.println("Exiting the calculator. Goodbye!");
                         exit = true;
                         break;
                     default:
-                        System.out.println("Invalid choice! Please select an option from 1 to 4.");
+                        System.out.println("Invalid choice! Please select an option from 1 to 5.");
                 }
             } catch (IllegalArgumentException e) {
                 System.out.println("Mathematical Error: " + e.getMessage());

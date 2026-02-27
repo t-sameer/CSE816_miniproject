@@ -32,4 +32,11 @@ public class CalculatorTest {
         assertThrows(IllegalArgumentException.class, () -> calculator.naturalLog(0.0));
         assertThrows(IllegalArgumentException.class, () -> calculator.naturalLog(-5.0));
     }
+
+    @Test
+    public void testPower() {
+        assertEquals(8.0, calculator.power(2.0, 3.0), 0.001);
+        assertEquals(1.0, calculator.power(5.0, 0.0), 0.001);
+        assertEquals(0.25, calculator.power(2.0, -2.0), 0.001);
+    }
 }
