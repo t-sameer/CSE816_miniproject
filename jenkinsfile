@@ -3,7 +3,7 @@ pipeline {
     environment {
         DOCKER_HUB_CREDENTIALS_ID = 'dockerhub-creds'
         DOCKER_IMAGE = 'tsameer/calculator:latest'
-        NOTIFICATION_EMAIL = 'dualcore0099@gmail.com'
+        NOTIFICATION_EMAIL = 'employee.esdproject@gmail.com'
     }
     stages {
         stage('Checkout Code') {
