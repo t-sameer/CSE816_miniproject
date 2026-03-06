@@ -1,14 +1,13 @@
 FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
-
 COPY pom.xml .
 COPY src ./src
 
-RUN mvn clean compile
+RUN mvn clean package
 
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
-COPY --from=build /app/target/classes ./classes
+COPY --from=build /app/target/ScientificCalculator-1.0-SNAPSHOT.jar ./calculator.jar
 
-CMD ["java", "-cp", "classes", "Main"]
+CMD ["java", "-cp", "calculator.jar", "org.example.Main"]

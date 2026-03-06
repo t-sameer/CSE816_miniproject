@@ -1,0 +1,29 @@
+---
+- name: Deploy Scientific Calculator Docker Container
+  hosts: local
+  become: yes
+  vars:
+
+    docker_image: "tsameer/calculator:latest"
+    container_name: "scientific-calculator-app"
+
+  tasks:
+    - name: Ensure Docker Python library is installed (required by Ansible Docker module)
+      apt:
+        name: python3-docker
+        state: present
+        update_cache: yes
+
+    - name: Pull the latest Docker image from Docker Hub
+      community.docker.docker_image:
+        name: "{{ docker_image }}"
+        source: pull
+
+    - name: Deploy the Docker container (Interactive & TTY enabled)
+      community.docker.docker_container:
+        name: "{{ container_name }}"
+        image: "{{ docker_image }}"
+        state: started
+        restart_policy: always
+        interactive: yes
+        tty: yes
