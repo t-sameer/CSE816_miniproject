@@ -7,20 +7,30 @@ pipeline {
     }
     stages {
         stage('Checkout Code') {
-            echo 'Pulling code from GitHub...'
-            steps { checkout scm }
+
+            steps {
+                    echo 'Pulling code from GitHub...'
+                    checkout scm
+                    }
         }
         stage('Build & Test with Maven') {
-            echo 'Compiling and running JUnit tests...'
-            steps { sh 'mvn clean package' }
+
+            steps {
+                    echo 'Compiling and running JUnit tests...'
+                    sh 'mvn clean package'
+                    }
         }
         stage('Build Docker Image') {
-            echo 'Building the Docker Image...'
-            steps { sh "docker build -t ${DOCKER_IMAGE} ." }
+
+            steps {
+                    echo 'Building the Docker Image...'
+                    sh "docker build -t ${DOCKER_IMAGE} ."
+                    }
         }
         stage('Push to Docker Hub') {
-            echo 'Pushing image to Docker Hub...'
+
             steps {
+                echo 'Pushing image to Docker Hub...'
                 withCredentials([usernamePassword(credentialsId: env.DOCKER_HUB_CREDENTIALS_ID, passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                     sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
                     sh "docker push ${DOCKER_IMAGE}"
@@ -30,7 +40,7 @@ pipeline {
     }
     post {
         always {
-            // Clean up the local docker image to save space
+
             sh "docker rmi ${DOCKER_IMAGE} || true"
         }
         success {
